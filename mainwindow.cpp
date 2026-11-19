@@ -9,6 +9,10 @@
 #include <QTextStream>
 #include <QTimer>
 #include <QInputDialog>
+#include <QKeyEvent>
+#include <QTextCursor>
+#include <QTextFormat>
+#include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
