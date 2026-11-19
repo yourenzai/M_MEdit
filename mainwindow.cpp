@@ -13,6 +13,60 @@
 #include <QTextCursor>
 #include <QTextFormat>
 #include <QRegularExpression>
+#include <QPlainTextEdit>
+
+
+// 这是一个用于自动处理 Markdown 列表的事件过滤器类。
+namespace
+{
+    class MarkdownAutoFormatter : public QObject
+    {
+        public:
+            explicit MarkdownAutoFormatter(QPlainTextEdit *textEdit)
+                : QObject(textEdit), m_textEdit(textEdit) {}
+
+        protected:
+            bool eventFilter(QObject *obj, QEvent *event) override
+            {
+                if (obj == m_textEdit && event->type() == QEvent::KeyPress) {
+                    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+                    if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
+                        QTextCursor cursor = m_textEdit->textCursor();
+                        cursor.movePosition(QTextCursor::StartOfBlock);
+                        cursor.select(QTextCursor::BlockUnderCursor);
+                        QString currentLine = cursor.selectedText();
+
+                        QRegularExpression listPattern(R"(^\s*([-*+]|\d+\.)\s+)");
+                        QRegularExpressionMatch match = listPattern.match(currentLine);
+
+                        if (match.hasMatch()) {
+                            QString listMarker = match.captured(1);
+                            QString newListMarker;
+
+                            if (listMarker.endsWith('.')) {
+                                // Increment the number for numbered lists
+                                int number = listMarker.left(listMarker.length() - 1).toInt();
+                                newListMarker = QString::number(number + 1) + ". ";
+                            } else {
+                                // Use the same marker for bullet lists
+                                newListMarker = listMarker + " ";
+                            }
+
+                            // Insert a new line with the appropriate list marker
+                            cursor.insertBlock();
+                            cursor.insertText(newListMarker);
+                            return true; // Event handled
+                        }
+                    }
+                }
+                return QObject::eventFilter(obj, event); // Pass the event on to the parent class
+            }
+        
+        private:
+            QPlainTextEdit *m_textEdit;
+    };
+}
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // 初始化界面，并在文档内容修改时更新窗口标题上的修改标记。
     ui->setupUi(this);
+    ui->textEdit->installEventFilter(new MarkdownAutoFormatter(ui->textEdit));
     ui->textEdit->setFont(QFont("Consolas", 14));
     setCurrentFile(QString());
     connect(ui->textEdit->document(), &QTextDocument::modificationChanged,
