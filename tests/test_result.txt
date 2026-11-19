@@ -1,0 +1,37 @@
+********* Start testing of TestMainWindow *********
+Config: Using QtTest library 6.8.3, Qt 6.8.3 (x86_64-little_endian-llp64 shared (dynamic) release build; by GCC 13.1.0), windows 11
+PASS   : TestMainWindow::initTestCase()
+PASS   : TestMainWindow::testInitialState()
+QDEBUG : TestMainWindow::testTimerConfiguration() [ANALYSIS] previewTimer->isSingleShot() = false
+QWARN  : TestMainWindow::testTimerConfiguration() [BUG CONFIRMED] previewTimer is periodic (singleShot == false)! It triggers endless setMarkdown() every 150ms after user types!
+PASS   : TestMainWindow::testTimerConfiguration()
+QDEBUG : TestMainWindow::testUserTypingModification() [STATE] isWindowModified: true
+QDEBUG : TestMainWindow::testUserTypingModification() [STATE] document()->isModified(): true
+PASS   : TestMainWindow::testUserTypingModification()
+PASS   : TestMainWindow::testMarkdownRendering()
+PASS   : TestMainWindow::testFindLogic()
+PASS   : TestMainWindow::testSaveAndOpenFile()
+QDEBUG : TestMainWindow::testUnimplementedActionsAudit() [AUDIT] actionReplace, actionZoomIn, actionZoomOut, actionZoomReset, actionWordWrap all exist in UI but slots are EMPTY.
+PASS   : TestMainWindow::testUnimplementedActionsAudit()
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionC" "新建"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionOpen" "打开"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionSave" "保存"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionSave_As" "另存为"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionExit" "退出"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionUndo" "撤销"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionCut" "剪切"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionPaste" "粘贴"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionFind" "查找"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionReplace" "替换"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionZoomIn" "放大"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionZoomOut" "缩小"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionZoomReset" "恢复默认大小"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionWordWrap" "自动换行"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Action missing shortcut: "actionTogglePreview" "显示/隐藏展示框"
+QDEBUG : TestMainWindow::testShortcutsAudit() [SHORTCUT AUDIT] Total actions without shortcuts: 15
+PASS   : TestMainWindow::testShortcutsAudit()
+QDEBUG : TestMainWindow::testTogglePreviewAudit() [AUDIT] actionTogglePreview is defined in UI but completely disconnected in mainwindow.cpp!
+PASS   : TestMainWindow::testTogglePreviewAudit()
+PASS   : TestMainWindow::cleanupTestCase()
+Totals: 11 passed, 0 failed, 0 skipped, 0 blacklisted, 284ms
+********* Finished testing of TestMainWindow *********

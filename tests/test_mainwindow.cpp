@@ -17,6 +17,7 @@ class TestMainWindow : public QObject
 private slots:
     void initTestCase();
     void testInitialState();
+    void testFontSize();
     void testTimerConfiguration();
     void testUserTypingModification();
     void testMarkdownRendering();
@@ -44,6 +45,24 @@ void TestMainWindow::testInitialState()
     auto *preview = w.findChild<QTextBrowser*>("previewBrowser");
     QVERIFY(preview != nullptr);
     QVERIFY(preview->toPlainText().isEmpty());
+}
+
+void TestMainWindow::testFontSize()
+{
+    MainWindow w;
+    auto *textEdit = w.findChild<QPlainTextEdit*>("textEdit");
+    QVERIFY(textEdit != nullptr);
+    qDebug() << "[FONT TEST] textEdit font family:" << textEdit->font().family()
+             << "pointSize:" << textEdit->font().pointSize();
+    QCOMPARE(textEdit->font().pointSize(), 14);
+    QCOMPARE(textEdit->font().family(), QString("Consolas"));
+
+    auto *preview = w.findChild<QTextBrowser*>("previewBrowser");
+    QVERIFY(preview != nullptr);
+    qDebug() << "[FONT TEST] previewBrowser font family:" << preview->font().family()
+             << "pointSize:" << preview->font().pointSize();
+    QCOMPARE(preview->font().pointSize(), 14);
+    QCOMPARE(preview->font().family(), QString("Consolas"));
 }
 
 void TestMainWindow::testTimerConfiguration()
