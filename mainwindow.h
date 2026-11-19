@@ -34,6 +34,7 @@ private slots:
     void on_actionZoomOut_triggered();
     void on_actionZoomReset_triggered();
     void on_actionWordWrap_triggered();
+    void on_actionTogglePreview_triggered();
 
 private:
     bool maybeSave();

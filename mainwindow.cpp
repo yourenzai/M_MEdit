@@ -241,3 +241,9 @@ void MainWindow::on_actionWordWrap_triggered()
 {
     
 }
+
+// “显示/隐藏预览”功能的槽函数，当前未实现。
+void MainWindow::on_actionTogglePreview_triggered()
+{
+
+}
