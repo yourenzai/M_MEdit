@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // 初始化界面，并在文档内容修改时更新窗口标题上的修改标记。
     ui->setupUi(this);
-    ui->textEdit->setFont(QFont("Consolas", 24));
+    ui->textEdit->setFont(QFont("Consolas", 14));
     setCurrentFile(QString());
     connect(ui->textEdit->document(), &QTextDocument::modificationChanged,
             this, &QWidget::setWindowModified);
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
         previewTimer->start(150);
     });
 
-    ui->previewBrowser->setFont(QFont("Consolas", 16));
+    ui->previewBrowser->setFont(QFont("Consolas", 14));
     connect(previewTimer, &QTimer::timeout, this, [this]()
     {
         ui->previewBrowser->setMarkdown(ui->textEdit->toPlainText());
