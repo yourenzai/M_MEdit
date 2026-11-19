@@ -39,6 +39,7 @@ M_MEdit_ui.h
 # 临时测试与日志文件
 test.md
 test_out.txt
+test_result.txt
 *.log
 
 # 本地旧版练习文件备份（保留在电脑，不上传仓库）
