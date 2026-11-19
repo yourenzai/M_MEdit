@@ -22,6 +22,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->textEdit->document(), &QTextDocument::modificationChanged,
             this, &QWidget::setWindowModified);
 
+    ui->actionTogglePreview->setCheckable(true);
+    ui->actionTogglePreview->setChecked(true);
+
     connect(ui->textEdit, &QPlainTextEdit::textChanged, this, [this]()
     {
         previewTimer->start(150);
@@ -242,8 +245,8 @@ void MainWindow::on_actionWordWrap_triggered()
     
 }
 
-// “显示/隐藏预览”功能的槽函数，当前未实现。
+// 根据菜单动作的勾选状态显示或隐藏 Markdown 预览。
 void MainWindow::on_actionTogglePreview_triggered()
 {
-
+    ui->previewBrowser->setVisible(ui->actionTogglePreview->isChecked());
 }

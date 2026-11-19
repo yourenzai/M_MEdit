@@ -25,7 +25,7 @@ private slots:
     void testSaveAndOpenFile();
     void testUnimplementedActionsAudit();
     void testShortcutsAudit();
-    void testTogglePreviewAudit();
+    void testTogglePreview();
 };
 
 void TestMainWindow::initTestCase()
@@ -201,21 +201,25 @@ void TestMainWindow::testShortcutsAudit()
     qDebug() << "[SHORTCUT AUDIT] Total actions without shortcuts:" << actionsWithoutShortcut;
 }
 
-void TestMainWindow::testTogglePreviewAudit()
+void TestMainWindow::testTogglePreview()
 {
     MainWindow w;
     auto *actionTogglePreview = w.findChild<QAction*>("actionTogglePreview");
     QVERIFY(actionTogglePreview != nullptr);
-    
-    // In mainwindow.h and mainwindow.cpp, there is NO on_actionTogglePreview_triggered() slot!
-    // We can verify that triggering it does not hide or toggle previewBrowser
+
     auto *preview = w.findChild<QTextBrowser*>("previewBrowser");
     QVERIFY(preview != nullptr);
-    
-    // Check if triggering changes preview visible state
-    // Note: since w is not shown, let's show offscreen or check connection
-    // When an action has no connection, triggering it is a no-op.
-    qDebug() << "[AUDIT] actionTogglePreview is defined in UI but completely disconnected in mainwindow.cpp!";
+    QVERIFY(actionTogglePreview->isCheckable());
+    QVERIFY(actionTogglePreview->isChecked());
+    QVERIFY(!preview->isHidden());
+
+    actionTogglePreview->trigger();
+    QVERIFY(!actionTogglePreview->isChecked());
+    QVERIFY(preview->isHidden());
+
+    actionTogglePreview->trigger();
+    QVERIFY(actionTogglePreview->isChecked());
+    QVERIFY(!preview->isHidden());
 }
 
 QTEST_MAIN(TestMainWindow)
