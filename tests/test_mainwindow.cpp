@@ -26,6 +26,7 @@ private slots:
     void testUnimplementedActionsAudit();
     void testShortcutsAudit();
     void testTogglePreview();
+    void testAutoFormatList();
 };
 
 void TestMainWindow::initTestCase()
@@ -220,6 +221,38 @@ void TestMainWindow::testTogglePreview()
     actionTogglePreview->trigger();
     QVERIFY(actionTogglePreview->isChecked());
     QVERIFY(!preview->isHidden());
+}
+
+void TestMainWindow::testAutoFormatList()
+{
+    MainWindow w;
+    w.show();
+    auto *textEdit = w.findChild<QPlainTextEdit*>("textEdit");
+    QVERIFY(textEdit != nullptr);
+
+    // 测试 1: 输入 "- 第一项"，然后按回车
+    textEdit->setPlainText("- 第一项");
+    QTextCursor cursor = textEdit->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    textEdit->setTextCursor(cursor);
+
+    QTest::keyClick(textEdit, Qt::Key_Return);
+    QString text = textEdit->toPlainText();
+    qDebug() << "[AUTO FORMAT TEST] Result after pressing Return on '- 第一项':\n" << text;
+    QVERIFY(text.contains("- 第一项"));
+    QVERIFY(text.endsWith("- "));
+
+    // 测试 2: 输入 "1. 第一项"，然后按回车
+    textEdit->setPlainText("1. 第一项");
+    cursor = textEdit->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    textEdit->setTextCursor(cursor);
+
+    QTest::keyClick(textEdit, Qt::Key_Return);
+    text = textEdit->toPlainText();
+    qDebug() << "[AUTO FORMAT TEST] Result after pressing Return on '1. 第一项':\n" << text;
+    QVERIFY(text.contains("1. 第一项"));
+    QVERIFY(text.endsWith("2. "));
 }
 
 QTEST_MAIN(TestMainWindow)
