@@ -10,6 +10,11 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 # 创建 Windows 可执行程序 (WIN32 表示 GUI 入口 WinMain，不弹黑框控制台)
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
 
+# 链接选项：支持 Unicode WinMain 入口
+if(MINGW)
+    target_link_options(${PROJECT_NAME} PRIVATE -municode)
+endif()
+
 # 包含头文件目录
 target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/packages/WebView2/include"
