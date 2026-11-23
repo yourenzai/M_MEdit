@@ -1,0 +1,24 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: Build",
+            "type": "shell",
+            "command": "cmake -B build -G \"Ninja\" -DCMAKE_CXX_COMPILER=\"C:/Qt/Tools/mingw1310_64/bin/g++.exe\" && cmake --build build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc",
+            "detail": "使用 CMake + Ninja 构建项目"
+        },
+        {
+            "label": "G++: Direct Build",
+            "type": "shell",
+            "command": "powershell -Command \"if (-not (Test-Path build)) { New-Item -ItemType Directory build }; g++ -std=c++17 -municode -mwindows src/main.cpp -Ipackages/WebView2/include -Isrc packages/WebView2/lib/x64/WebView2Loader.dll -lole32 -loleaut32 -luser32 -lgdi32 -lshell32 -lcomdlg32 -lshlwapi -o build/M_MEdit.exe; Copy-Item packages/WebView2/lib/x64/WebView2Loader.dll build/ -Force; Copy-Item -Recurse assets build/ -Force; Write-Host 'Direct build finished.'\"",
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "detail": "使用 g++ 直接编译并复制依赖文件"
+        }
+    ]
+}

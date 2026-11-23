@@ -1,46 +1,15 @@
-# ==========================================
-# Qt / C++ .gitignore for M_MEdit
-# ==========================================
+# 构建输出目录
+build/
+bin/
+out/
 
-# 编译产物与输出目录
-debug/
-release/
-tests/debug/
-tests/release/
+# VS Code 缓存
+.vscode/.browse.c_cpp.db*
+.vscode/*.log
 
-# 目标文件与二进制程序
-*.o
-*.obj
-*.exe
-*.dll
-*.a
-*.so
-*.dylib
+# WebView2 自动生成的运行时用户数据目录
+*.exe.WebView2/
 
-# qmake / make 构建过程自动生成的文件
-Makefile
-Makefile.Debug
-Makefile.Release
-.qmake.stash
-moc_*.cpp
-moc_*.h
-ui_*.h
-qrc_*.cpp
-M_MEdit_ui.h
-
-# 个人 IDE / 编辑器私有配置
-.vscode/
-*.pro.user
-*.pro.user.*
-.idea/
-*.suo
-*.user
-
-# 临时测试与日志文件
-test.md
-test_out.txt
-test_result.txt
+# 系统临时文件
+*.tmp
 *.log
-
-# 本地旧版练习文件备份（保留在电脑，不上传仓库）
-old_file/
