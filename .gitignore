@@ -1,15 +1,93 @@
-# 构建输出目录
+# ==========================================
+# 用户指定排除目录 / 历史旧文件
+# ==========================================
+old_file/
+oldfile/
+old_files/
+oldfiles/
+
+# ==========================================
+# 构建输出与中间文件
+# ==========================================
 build/
 bin/
 out/
+target/
+cmake-build-*/
 
-# VS Code 缓存
+# C/C++ 编译产物
+*.obj
+*.o
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.map
+
+# 动态库与静态库（忽略普通产物，但保留 packages/ 依赖库）
+*.dll
+*.lib
+*.so
+*.dylib
+*.a
+!packages/**
+
+# ==========================================
+# CMake 生成文件与缓存
+# ==========================================
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+cmake_install.cmake
+build.ninja
+.ninja_deps
+.ninja_log
+CMakeUserPresets.json
+
+# ==========================================
+# WebView2 运行时用户数据目录
+# ==========================================
+*.exe.WebView2/
+EBWebView/
+
+# ==========================================
+# IDE & 编辑器配置
+# ==========================================
+# Visual Studio
+.vs/
+*.VC.db
+*.opendb
+*.user
+*.suo
+
+# VS Code 缓存与日志
 .vscode/.browse.c_cpp.db*
 .vscode/*.log
+.vscode/*.history
 
-# WebView2 自动生成的运行时用户数据目录
-*.exe.WebView2/
+# CLion / JetBrains
+.idea/
 
-# 系统临时文件
+# ==========================================
+# 系统与临时文件
+# ==========================================
 *.tmp
+*.temp
 *.log
+*.dmp
+*.bak
+*.swp
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride

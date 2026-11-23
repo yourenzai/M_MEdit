@@ -1,3 +1,0 @@
-C:/Users/Myour/Desktop/CS/CPP/CPP_Program/M_MEdit/build/CMakeFiles/M_MEdit.dir
-C:/Users/Myour/Desktop/CS/CPP/CPP_Program/M_MEdit/build/CMakeFiles/edit_cache.dir
-C:/Users/Myour/Desktop/CS/CPP/CPP_Program/M_MEdit/build/CMakeFiles/rebuild_cache.dir
