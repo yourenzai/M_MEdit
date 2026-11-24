@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'file-save':
                 if (window.chrome && window.chrome.webview) {
-                    window.chrome.webview.postMessage({ type: 'save', content: editor.value });
+                    window.chrome.webview.postMessage(editor.value);
                 } else {
                     console.log('保存内容:', editor.value);
                 }

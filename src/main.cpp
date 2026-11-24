@@ -5,6 +5,7 @@
 
 #include "WebView2.h"
 #include "WebView2Helper.h"
+#include "FileManager.h"
 
 // WebView2 全局控制接口指针
 static ICoreWebView2Controller* g_controller = nullptr;

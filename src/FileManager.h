@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
 inline bool saveFile(
     const std::string& filePath,
