@@ -158,4 +158,34 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
 // 兼容 ANSI 链接器入口
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCmdShow) {
     return wWinMain(hInstance, hPrevInstance, GetCommandLineW(), nCmdShow);
+
+EventRegistrationToken token{};
+
+g_webview->add_WebMessageReceived(
+    Callback<ICoreWebView2WebMessageReceivedEventHandler>(
+        [](ICoreWebView2*,
+           ICoreWebView2WebMessageReceivedEventArgs* args) -> HRESULT {
+            LPWSTR message = nullptr;
+            HRESULT hr = args->TryGetWebMessageAsString(&message);
+            if (FAILED(hr) || !message)
+                return E_FAIL;
+
+            int size = WideCharToMultiByte(
+                CP_UTF8, 0, message, -1, nullptr, 0, nullptr, nullptr);
+
+            if (size <= 0) {
+                CoTaskMemFree(message);
+                return E_FAIL;
+            }
+
+            std::string content(size, '\0');
+            WideCharToMultiByte(
+                CP_UTF8, 0, message, -1,
+                &content[0], size, nullptr, nullptr);
+            content.resize(size - 1);
+            CoTaskMemFree(message);
+
+            return saveFile("note.md", content) ? S_OK : E_FAIL;
+        }),
+    &token);
 }
