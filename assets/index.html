@@ -4,100 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M_MEdit</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f7f9fa;
-            color: #24292f;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-        header {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e1e4e8;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        h1 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1f2328;
-        }
-        .status-badge {
-            font-size: 12px;
-            padding: 3px 8px;
-            background: #dafbe1;
-            color: #1a7f37;
-            border-radius: 12px;
-            font-weight: 500;
-        }
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .card {
-            background: #ffffff;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            padding: 30px;
-            max-width: 600px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        .card h2 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #0969da;
-        }
-        .card p {
-            line-height: 1.6;
-            color: #57606a;
-            margin-bottom: 16px;
-        }
-        .steps {
-            text-align: left;
-            background: #f6f8fa;
-            border-radius: 6px;
-            padding: 15px 20px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .steps li {
-            margin-bottom: 8px;
-        }
-    </style>
+    <!-- 引入外部 CSS 样式 -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>M_MEdit - 轻量现代 Markdown 编辑器</h1>
-        <span class="status-badge">WebView2 运行正常</span>
-    </header>
-    <main>
-        <div class="card">
-            <h2>恭喜！步骤 1 环境已成功就绪</h2>
-            <p>你现在看到的内容是由 <strong>Windows 现代 WebView2 (Chromium 内核)</strong> 在原生 C++ 窗口中直接渲染的。</p>
-            <div class="steps">
-                <strong>后续步骤规划：</strong>
-                <ol>
-                    <li>在 assets/index.html 中添加左右双栏布局与输入框；</li>
-                    <li>引入 marked.js 实现 Markdown 实时预览排版；</li>
-                    <li>通过 window.chrome.webview.postMessage 与 C++ 建立文件存取交互。</li>
-                </ol>
-            </div>
+    <!-- 1. 顶部主工具栏 (Top Toolbar / Taskbar) -->
+    <header class="toolbar">
+        <!-- 1.1 文件操作区 -->
+        <div class="tool-group file-group">
+            <span class="app-logo">📝 M_MEdit</span>
+            <button id="btn-new" title="新建文件 (Ctrl+N)">新建</button>
+            <button id="btn-open" title="打开文件 (Ctrl+O)">打开</button>
+            <button id="btn-save" class="btn-primary" title="保存文件 (Ctrl+S)">保存</button>
         </div>
+
+        <div class="divider"></div>
+
+        <!-- 1.2 Markdown 快捷格式化按钮区 -->
+        <div class="tool-group format-group">
+            <button id="btn-bold" title="粗体"><b>B</b></button>
+            <button id="btn-italic" title="斜体"><i>I</i></button>
+            <button id="btn-h1" title="一级标题">H1</button>
+            <button id="btn-h2" title="二级标题">H2</button>
+            <button id="btn-h3" title="三级标题">H3</button>
+            <button id="btn-list" title="无序列表">• 列表</button>
+            <button id="btn-quote" title="引用">” 引用</button>
+            <button id="btn-code" title="代码块">&lt;/&gt;</button>
+            <button id="btn-link" title="超链接">🔗</button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <!-- 1.3 视图模式切换与状态区 -->
+        <div class="tool-group view-group">
+            <button id="btn-view-edit" title="仅编辑模式">仅编辑</button>
+            <button id="btn-view-split" class="active" title="双栏分屏模式">分屏</button>
+            <button id="btn-view-preview" title="仅预览模式">仅预览</button>
+        </div>
+    </header>
+
+    <!-- 2. 中间主体工作区（预留编辑区和预览区） -->
+    <main class="editor-container">
+        <!-- 左侧 Markdown 源码输入区 -->
+        <section class="pane editor-pane">
+            <textarea id="editor" placeholder="在此输入 Markdown 内容..."></textarea>
+        </section>
+
+        <!-- 中间拖拽分割条 (可选扩展) -->
+        <div class="resizer" id="drag-resizer"></div>
+
+        <!-- 右侧 HTML 渲染预览区 -->
+        <section class="pane preview-pane" id="preview">
+            <div class="preview-content">
+                <p style="color: #8c959f;">预览内容将在此显示...</p>
+            </div>
+        </section>
     </main>
+
+    <!-- 3. 底部状态栏 (Bottom Status Bar) -->
+    <footer class="statusbar">
+        <div class="status-left">
+            <span id="file-status">● 未命名文件 (未保存)</span>
+            <span class="status-separator">|</span>
+            <span id="cursor-pos">第 1 行, 第 1 列</span>
+        </div>
+        <div class="status-right">
+            <span id="word-count">字数: 0</span>
+            <span class="status-separator">|</span>
+            <span>UTF-8</span>
+            <span class="status-separator">|</span>
+            <span class="badge-online">WebView2 已就绪</span>
+        </div>
+    </footer>
+
+    <!-- 引入业务逻辑 JS -->
+    <script src="app.js"></script>
 </body>
 </html>
