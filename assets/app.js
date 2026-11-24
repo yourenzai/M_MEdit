@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('M_MEdit - 轻量现代 Markdown 编辑器\n基于 Win32 + WebView2 构建');
                 break;
             case 'help-markdown':
-                editor.value = `# 欢迎使用 M_MEdit\n\n这是一款轻量现代的 **Markdown 编辑器**。\n\n## 功能特性\n- [x] Typora 风格原生菜单栏\n- [x] 实时双栏预览\n- [x] 原生快捷键支持\n\n> 享受极简创作乐趣！`;
+                editor.value = `# 欢迎使用 M_MEdit\n\n这是一款轻量现代的 **Markdown 编辑器**。\n\n## 功能特性\n[x] 实时双栏预览\n- [x] 原生快捷键支持\n\n> 享受极简创作乐趣！`;
                 updatePreview();
                 break;
         }
