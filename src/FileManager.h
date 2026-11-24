@@ -13,7 +13,7 @@ inline bool saveFile(
         std::cerr << "Failed to open file for writing: " << filePath << std::endl;
         return false;
     }
-    file <<content;
+    file << content;
     file.close();
     return true;
 }
