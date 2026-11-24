@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <shlwapi.h>
+#include <filesystem>
 #include <string>
 
 #include "WebView2.h"
@@ -50,6 +51,60 @@ void InitWebView(HWND hWnd) {
                     g_controller = controller;
                     g_controller->AddRef(); // 增加引用计数持有指针
                     g_controller->get_CoreWebView2(&g_webview);
+
+                    auto onMessageReceived = Callback<ICoreWebView2WebMessageReceivedEventHandler>(
+                        [](ICoreWebView2* sender, ICoreWebView2WebMessageReceivedEventArgs* args) -> HRESULT {
+                            LPWSTR message = nullptr;
+                            HRESULT hr = args->TryGetWebMessageAsString(&message);
+                            if (FAILED(hr) || !message) {
+                                if (message) CoTaskMemFree(message);
+                                sender->PostWebMessageAsString(L"save-failed");
+                                return FAILED(hr) ? hr : E_FAIL;
+                            }
+
+                            int size = WideCharToMultiByte(
+                                CP_UTF8, 0, message, -1, nullptr, 0, nullptr, nullptr);
+                            if (size <= 0) {
+                                CoTaskMemFree(message);
+                                sender->PostWebMessageAsString(L"save-failed");
+                                return E_FAIL;
+                            }
+
+                            std::string content(static_cast<size_t>(size), '\0');
+                            int converted = WideCharToMultiByte(
+                                CP_UTF8, 0, message, -1,
+                                content.data(), size, nullptr, nullptr);
+                            CoTaskMemFree(message);
+                            if (converted <= 0) {
+                                sender->PostWebMessageAsString(L"save-failed");
+                                return E_FAIL;
+                            }
+                            content.resize(static_cast<size_t>(size - 1));
+
+                            wchar_t executablePath[MAX_PATH] = {};
+                            DWORD pathLength = GetModuleFileNameW(
+                                nullptr, executablePath, MAX_PATH);
+                            if (pathLength == 0 || pathLength >= MAX_PATH) {
+                                sender->PostWebMessageAsString(L"save-failed");
+                                return E_FAIL;
+                            }
+
+                            std::filesystem::path outputPath =
+                                std::filesystem::path(executablePath).parent_path() / L"note.md";
+                            bool saved = saveFile(outputPath, content);
+                            sender->PostWebMessageAsString(
+                                saved ? L"save-success" : L"save-failed");
+                            return saved ? S_OK : E_FAIL;
+                        }
+                    );
+
+                    EventRegistrationToken messageToken{};
+                    HRESULT messageHandlerResult = g_webview->add_WebMessageReceived(
+                        onMessageReceived, &messageToken);
+                    if (FAILED(messageHandlerResult)) {
+                        MessageBoxW(hWnd, L"注册保存消息处理程序失败！", L"错误", MB_ICONERROR);
+                        return messageHandlerResult;
+                    }
 
                     // 调整 WebView2 区域使其贴合窗口客户区
                     RECT bounds;
@@ -158,34 +213,4 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
 // 兼容 ANSI 链接器入口
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR, int nCmdShow) {
     return wWinMain(hInstance, hPrevInstance, GetCommandLineW(), nCmdShow);
-
-EventRegistrationToken token{};
-
-g_webview->add_WebMessageReceived(
-    Callback<ICoreWebView2WebMessageReceivedEventHandler>(
-        [](ICoreWebView2*,
-           ICoreWebView2WebMessageReceivedEventArgs* args) -> HRESULT {
-            LPWSTR message = nullptr;
-            HRESULT hr = args->TryGetWebMessageAsString(&message);
-            if (FAILED(hr) || !message)
-                return E_FAIL;
-
-            int size = WideCharToMultiByte(
-                CP_UTF8, 0, message, -1, nullptr, 0, nullptr, nullptr);
-
-            if (size <= 0) {
-                CoTaskMemFree(message);
-                return E_FAIL;
-            }
-
-            std::string content(size, '\0');
-            WideCharToMultiByte(
-                CP_UTF8, 0, message, -1,
-                &content[0], size, nullptr, nullptr);
-            content.resize(size - 1);
-            CoTaskMemFree(message);
-
-            return saveFile("note.md", content) ? S_OK : E_FAIL;
-        }),
-    &token);
 }

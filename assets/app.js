@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const charCountEl = document.getElementById('char-count');
     const statusDirtyEl = document.getElementById('status-dirty');
 
+    if (window.chrome && window.chrome.webview) {
+        window.chrome.webview.addEventListener('message', (event) => {
+            if (event.data === 'save-success') {
+                statusDirtyEl.textContent = '已保存';
+            } else if (event.data === 'save-failed') {
+                statusDirtyEl.textContent = '保存失败';
+            }
+        });
+    }
+
     let isMenuOpen = false; // 是否已有菜单处于展开状态
 
     // ===== 1. 顶部菜单栏交互 (Typora 交互机制) =====
@@ -75,10 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'file-save':
                 if (window.chrome && window.chrome.webview) {
                     window.chrome.webview.postMessage(editor.value);
+                    statusDirtyEl.textContent = '正在保存...';
                 } else {
                     console.log('保存内容:', editor.value);
+                    statusDirtyEl.textContent = '浏览器中无法保存';
                 }
-                statusDirtyEl.textContent = '已保存';
                 break;
 
             // 格式化命令

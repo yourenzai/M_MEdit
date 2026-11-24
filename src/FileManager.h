@@ -1,20 +1,20 @@
 #pragma once
 
 #include <fstream>
+#include <filesystem>
 #include <iostream>
 #include <string>
 
 inline bool saveFile(
-    const std::string& filePath,
+    const std::filesystem::path& filePath,
     const std::string& content)
 {
-    std::ofstream file(filePath);
+    std::ofstream file(filePath, std::ios::binary);
     if (!file.is_open())
     {
-        std::cerr << "Failed to open file for writing: " << filePath << std::endl;
+        std::cerr << "Failed to open file for writing: " << filePath.string() << std::endl;
         return false;
     }
     file << content;
-    file.close();
-    return true;
+    return file.good();
 }
