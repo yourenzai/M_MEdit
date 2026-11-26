@@ -5,6 +5,8 @@ old_file/
 oldfile/
 old_files/
 oldfiles/
+docs/
+tests/
 
 # ==========================================
 # 构建输出与中间文件
