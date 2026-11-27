@@ -41,5 +41,31 @@ inline bool ShowOpenMarkdownDialog(
     if(SUCCEEDED(dialog->GetOptions(&options)))
         dialog->SetOptions(options | FOS_FORCEFILESYSTEM | FOS_FILEMUSTEXIST);
 
-    COMDLG_FILTERSPEC filer[] = {{L""}};
+    COMDLG_FILTERSPEC filer[] = {{L"Markdown 文件 (*.md)", L"*.md"}};
+
+    dialog->SetFileTypes(ARRAYSIZE(filer),filer);
+    dialog->SetFileTypeIndex(1);
+    dialog->SetDefaultExtension(L"md");
+    dialog->SetTitle(L"打开 Markdown 文件");
+
+    hr = dialog->Show(owner);
+
+    bool ok = false;
+    if (hr == HRESULT_FROM_WIN32(ERROR_CANCELLED))
+    {
+        canceled = true;
+    }
+    else if (SUCCEEDED(hr))
+    {
+        IShellItem* item = nullptr;
+        if (SUCCEEDED(dialog->GetResult(&item)))
+        {
+            outPath = PathFromShellItem(item);
+            item->Release();
+            ok = !outPath.empty();
+        }
+    }
+
+    dialog->Release();
+    return ok;
 }
