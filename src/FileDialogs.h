@@ -78,4 +78,45 @@ inline bool ShowSaveMarkdownDidlog(
 {
     canceled = false;
     outPath.clear();
+
+    IFileSaveDialog* dialog = nullptr;
+    HRESULT hr = CoCreateInstance(
+        CLSID_FileSaveDialog, nullptr, CLSCTX_INPROC_SERVER,
+        IID_IFileDialog, reinterpret_cast<void**>(&dialog));
+    if (FAILED(hr) || !dialog)
+        return false;
+
+    FILEOPENDIALOGOPTIONS options = 0;
+    if (SUCCEEDED(dialog->GetOptions(&options)))
+    {
+        dialog->SetOptions(options | FOS_OVERWRITEPROMPT | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
+    }
+    COMDLG_FILTERSPEC filter[] = {{L"Markdown 文件 (*md)",L"*.md"}};
+    dialog->SetFileTypes(ARRAYSIZE(filter),filter);
+    dialog->SetFileTypeIndex(1);
+    dialog->SetDefaultExtension(L"*.md");
+    dialog->SetTitle(L"保存 Markdown 文件");
+    if(!defaultName.empty())
+        dialog->SetFileName(defaultName.c_str());
+
+    hr = dialog->Show(owner);
+
+    bool ok = false;
+    if (hr == HRESULT_FROM_WIN32(ERROR_CANCELLED))
+    {
+        canceled = true;
+    }
+    else if (SUCCEEDED(hr))
+    {
+        IShellItem* item = nullptr;
+        if (SUCCEEDED(dialog->GetResult(&item)))
+        {
+            outPath = PathFromShellItem(item);
+            item->Release();
+            ok = !outPath.empty();
+        }
+    }
+
+    dialog->Release();
+    return ok;
 }
