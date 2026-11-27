@@ -31,6 +31,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     shell32
     comdlg32
     shlwapi
+    uuid
 )
 
 # 编译后自动拷贝 WebView2Loader.dll 和 assets 静态资源到输出目录
