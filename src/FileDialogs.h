@@ -69,3 +69,13 @@ inline bool ShowOpenMarkdownDialog(
     dialog->Release();
     return ok;
 }
+
+inline bool ShowSaveMarkdownDidlog(
+    HWND owner,
+    const std::wstring& defaultName,
+    std::filesystem::path& outPath,
+    bool& canceled)
+{
+    canceled = false;
+    outPath.clear();
+}
