@@ -40,7 +40,7 @@ body {
     user-select: none;
 }
 
-/* ===== 顶部菜单栏 (Typora 风格) ===== */
+/* ===== 顶部菜单栏 ===== */
 .menubar {
     height: 28px;
     background-color: var(--bg-menu);
